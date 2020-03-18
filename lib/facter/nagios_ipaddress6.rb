@@ -4,43 +4,42 @@
 
 # Aux funcion to filter RFC4193 addresses
 def valid_addr?(addr)
-  not (addr =~ /^fe80.*/ or addr =~ /^fd.*/)
+  !(addr =~ %r{^fe80.*} || addr =~ %r{^fd.*})
 end
 
 if Facter.version.to_f < 3.0
   require 'facter/util/ip'
 
   def get_address_after_token(output, token)
-
-    String(output).scan(/#{token}\s?((?>[0-9,a-f,A-F]*\:{1,2})+[0-9,a-f,A-F]{0,4})/).
-      select { |match| valid_addr?(match.first) }.
-      flatten.
-      sort_by { |x| x.length }.
-      shift
+    String(output).scan(%r{#{token}\s?((?>[0-9,a-f,A-F]*\:{1,2})+[0-9,a-f,A-F]{0,4})})
+                  .select { |match| valid_addr?(match.first) }
+                  .flatten
+                  .sort_by { |x| x.length }
+                  .shift
   end
 
   Facter.add(:nagios_ipaddress6) do
     setcode do
-      output=Facter::Util::IP.get_interfaces.reject { |i,_| i =~ /lo.*/ }.map { |i| Facter::Util::IP::get_single_interface_output(i) }.join("\n")
+      output = Facter::Util::IP.get_interfaces.reject { |i, _| i =~ %r{lo.*} }.map { |i| Facter::Util::IP.get_single_interface_output(i) }.join("\n")
       get_address_after_token(output, 'inet6(?: addr:)?')
     end
   end
 
 else
-  nagios_ipaddress6 = Facter.value(:networking)['interfaces'].
-    reject { |i,_| i =~ /lo.*/ }.
-    values.
-    map { |x| x['bindings6'] }
+  nagios_ipaddress6 = Facter.value(:networking)['interfaces']
+                            .reject { |i, _| i =~ %r{lo.*} }
+                            .values
+                            .map { |x| x['bindings6'] }
   if nagios_ipaddress6.any?
     Facter.add(:nagios_ipaddress6) do
       setcode do
-        nagios_ipaddress6.
-          flatten.
-          compact.
-          map { |x| x['address'] }.
-          select { |x| valid_addr? x }.
-          sort_by { |x| x.length }.
-          shift
+        nagios_ipaddress6
+          .flatten
+          .compact
+          .map { |x| x['address'] }
+          .select { |x| valid_addr? x }
+          .sort_by { |x| x.length }
+          .shift
       end
     end
   end

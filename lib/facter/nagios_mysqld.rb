@@ -11,4 +11,3 @@ binaries.each do |filename|
     Facter.add('nagios_mysqld') { setcode { true } }
   end
 end
-

@@ -3,4 +3,3 @@
 if FileTest.exists?('/usr/bin/memcached')
   Facter.add('nagios_memcached') { setcode { true } }
 end
-

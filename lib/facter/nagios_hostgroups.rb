@@ -2,8 +2,7 @@
 
 files = Dir['/etc/nagios/facter/hostgroup_*.conf']
 
-if !files.empty?
-  hostgroups = files.collect {|filename| filename[/_([^\.]+)\.conf$/, 1] }
+unless files.empty?
+  hostgroups = files.map { |filename| filename[%r{_([^\.]+)\.conf$}, 1] }
   Facter.add('nagios_hostgroups') { setcode { hostgroups.join(',') } }
 end
-

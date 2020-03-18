@@ -3,4 +3,3 @@
 if FileTest.exists?('/opt/moxi/bin/moxi')
   Facter.add('nagios_moxi') { setcode { true } }
 end
-

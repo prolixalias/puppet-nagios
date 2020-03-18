@@ -1,7 +1,7 @@
 # Facter to detect if there is a glusterfs mount in /etc/fstab
 
 # Same strings as checked from the check_mountpoints script
-fstypes = [ 'nfs', 'nfs4', 'davfs', 'cifs', 'fuse', 'glusterfs', 'ocfs2', 'lustre' ]
+fstypes = ['nfs', 'nfs4', 'davfs', 'cifs', 'fuse', 'glusterfs', 'ocfs2', 'lustre']
 fstypes_found = []
 
 if File.exist? '/etc/fstab'
@@ -16,14 +16,12 @@ if File.exist? '/etc/fstab'
         next if fstypes_found.include? fstype
         fstypes_found << fstype
       end
-
     end
   end
-  
-  if ! fstypes_found.empty?
+
+  unless fstypes_found.empty?
     # Create the fact
     Facter.add('nagios_mountpoints') { setcode { fstypes_found.join(',') } }
   end
 
 end
-

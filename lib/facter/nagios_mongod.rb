@@ -10,4 +10,3 @@ binaries.each do |filename|
     Facter.add('nagios_mongod') { setcode { true } }
   end
 end
-

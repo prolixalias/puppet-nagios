@@ -3,4 +3,3 @@
 if FileTest.exists?('/usr/share/elasticsearch/bin/elasticsearch')
   Facter.add('nagios_elasticsearch') { setcode { true } }
 end
-

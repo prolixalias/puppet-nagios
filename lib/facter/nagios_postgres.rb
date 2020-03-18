@@ -21,4 +21,3 @@ binaries_pgbouncer.each do |filename|
     Facter.add('nagios_postgres_pgbouncer') { setcode { true } }
   end
 end
-

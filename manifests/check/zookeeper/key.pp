@@ -39,7 +39,7 @@ define nagios::check::zookeeper::key () {
     nagios::service { "check_${key}_${check_title}":
       ensure              => $ensure,
       check_command       => "check_nrpe_${key}",
-      service_description => "${key}",
+      service_description => $key,
       servicegroups       => 'zookeeper',
     }
   } else {

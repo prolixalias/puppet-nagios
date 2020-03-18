@@ -30,8 +30,8 @@ class nagios::check::redis_sentinel (
   }
 
   nagios::client::nrpe_file { 'check_sentinel_master_health':
-    ensure  => $ensure_mode,
-    args    => $final_args,
+    ensure => $ensure_mode,
+    args   => $final_args,
   }
 
   nagios::client::nrpe_plugin { 'check_sentinel_master_health':
